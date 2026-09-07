@@ -42,7 +42,7 @@
     </style>
   </head>
   <body>
-    <nav>
+    <nav>Norko2014
       <a href="index.html"><img  src="news.png" class="menio" alt="Novinky" title="Novinky"></a>
       <a href="tips.html"><img  src="tips.png" class="menio" alt="Tipy, triky a návody" title="Tipy, triky a návody"></a>
       <a href="server.html"><img  src="server.gif" class="menia" alt="Server" title="Server"></a>
@@ -79,5 +79,39 @@
         <ul><li><a href="javascript:void(0)" onclick="navigator.clipboard.writeText(this.innerText); alert('Skopírované!');" title="Klikni pre skopírovanie!">example.bedrock.link</a></li></ul>
       </li>
     </ul>
+    <div class="server-status">
+      <span id="status-indicator" class="indicator offline"></span>
+      <span id="status-text">Načítavam stav servera...</span>
+    </div>
+    <script>
+      async function skontrolujServer() {
+        const ipServera = "mc.lajfant.sk"; // Sem vlož svoju IP adresu Minecraft servera
+        const indicator = document.getElementById("status-indicator");
+        const statusText = document.getElementById("status-text");
+    
+        try {
+          // Bezplatné API pre zistenie stavu Java servera
+          const response = await fetch(`https://api.mcstatus.io/v2/status/java/${ipServera}`);
+          const data = await response.json();
+    
+          if (data.online) {
+            indicator.className = "indicator online";
+            statusText.innerText = `ONLINE (${data.players.online}/${data.players.max} hráčov)`;
+          } else {
+            indicator.className = "indicator offline";
+            statusText.innerText = "OFFLINE";
+          }
+        } catch (error) {
+          indicator.className = "indicator offline";
+          statusText.innerText = "Chyba pri načítaní stavu";
+        }
+      }
+    
+      // Spustenie pri načítaní stránky
+      skontrolujServer();
+    
+      // Automatická obnova každých 60 sekúnd
+      setInterval(skontrolujServer, 60000);
+    </script>
   </body>
 </html>
